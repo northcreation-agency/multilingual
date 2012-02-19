@@ -35,6 +35,6 @@ class MultilingualDataObject extends DataObject{
 			} 
 		}		
 		return isset($this->record[$field]) ? $this->record[$field] : null;
-	}	
+	}		
 }
 ?>

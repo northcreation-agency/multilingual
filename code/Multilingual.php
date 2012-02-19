@@ -127,7 +127,7 @@ class Multilingual extends DataObjectDecorator {
 	public static function enable(){
 		DataObject::add_extension("SiteConfig", "Multilingual_SiteConfig");
 		DataObject::add_extension("SiteTree", "Multilingual_SiteTree");
-		DataObject::add_extension("KBDataObject", "Multilingual_DataObject");
+		DataObject::add_extension("MultilingualDataObject", "Multilingual_DataObject");
 		foreach (multilingual::multilingual_extra_langs() as $lang) {
 			Director::addRules(100, array(
 				$lang . '/$URLSegment/$Action/$ID/$OtherID' => 'MultilingualModelAsController'
@@ -323,7 +323,6 @@ class Multilingual extends DataObjectDecorator {
 class Multilingual_SiteConfig extends Multilingual {
 	static $decorated_class = "SiteConfig";
 	static $multilingual_fields = array(
-		"Title",
 		"Tagline",
 	);
 }
@@ -343,7 +342,9 @@ class Multilingual_SiteTree extends Multilingual {
 
 class Multilingual_DataObject extends Multilingual {
 	static $decorated_class = "MultilingualDataObject";
-	static $multilingual_fields = array("Title");	
+	static $multilingual_fields = array(
+		"Title"		
+	);
 }
 
 ?>

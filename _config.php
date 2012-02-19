@@ -39,15 +39,26 @@ array(
 ));
 
 // Global multilingual fields for all MultilingualDataObject and its descendants
-Multilingual_DataObject::set_multilingal_fields(array());
+Multilingual_DataObject::set_multilingal_fields(
+array(
+	"Title"
+));
 
 
+
+/*
+ * For SiteConfig to work properly, you have to sadly hack the SiteConfig.php class. 
+ * The upside is that its a small hack. Change the following:
+ * 
+ * "class SiteConfig extends DataObject" To:
+ * 
+ * "class SiteConfig extends MultilingualDataObject"
+ * 
+ */
 // Global multilingual fields for siteconfig
 Multilingual_SiteConfig::set_multilingal_fields(
-array(
-	"Title",		
-	"Tagline",
-	"ReceiptEmailSubject"
+array(			
+	"Tagline",	
 ));
 
 
