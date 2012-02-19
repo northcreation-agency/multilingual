@@ -18,7 +18,7 @@ This module allows you to add multilanguage fields to your page/dataobjects.
 Installation Instructions
 -----------------------------------------------
 1. Place this module in your root of your Silverstripe installation. 
-2. Change your settings like langs and exclude words as you prefer in multilanguage/_config.php. 
+2. Change your settings like langs and add multilanguage fields as you prefer in multilanguage/_config.php. 
 3. Run yoursitename.com/dev/build/?flush=1.
 
 Usage Overview
