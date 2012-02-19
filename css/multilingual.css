@@ -1,0 +1,60 @@
+/*Compositefield*/
+body .right form div.CompositeField.multilingualfield {
+	margin-left:0px;
+}
+body .right form div.CompositeField.multilingualfield label.left {
+	margin-left:0px;
+	width:auto;
+}
+
+.marked-label{
+	margin-left:5px;
+	min-width: 35px;
+	display:inline-block;
+}
+.marked-label img{
+	float:left;
+	height: 15px;
+}
+.marked-label .highlight{
+	background:#111;
+	color:#eee;
+	padding:1px;
+}
+.marked-label .language-nice{
+	background:transparent;
+	color:#666;
+	padding:1px;
+	opacity: 0.1;
+	
+}
+.marked-label:hover .language-nice{
+	-webkit-transition: all 0.3s ease-in-out;
+	-mozilla-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+	opacity: 1;
+	background:#111;
+	color:#eee;
+}
+
+.field.hiddenfield{
+	display:none;
+}
+
+
+/*
+Language link list in admin
+*/
+#TopLangSelector{
+	position: absolute;
+	right: 0px;
+}
+
+
+/*
+Language selector in admin
+*/
+#TopLangSelectorDropdown{
+	float:right;
+	clear:none;
+}

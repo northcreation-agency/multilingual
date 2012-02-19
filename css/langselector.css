@@ -1,0 +1,30 @@
+#lang {
+	position: relative;
+	z-index: 999;
+}
+#lang ul{
+	float:right;
+	margin:-5px 200px 0 0;
+}
+#lang li{
+	font-size:0.8em;
+	float:right;
+	margin:0 5px 0 0;
+	
+}
+#lang li a,
+#lang li a span{
+	line-height: 1.4em;
+	float:left;
+	opacity:0.6;
+	color:#111;
+}
+#lang li a.selected,
+#lang li a:hover{
+	opacity:1;
+	text-decoration: underline;
+}
+#lang li img{
+	float:left;
+	margin:0 2px 0 0;
+}
