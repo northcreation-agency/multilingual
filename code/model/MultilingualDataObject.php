@@ -37,17 +37,6 @@ class MultilingualDataObject extends DataObject{
 		return isset($this->record[$field]) ? $this->record[$field] : null;
 	}	
 	
-	
-	
-	/*
-	 * Workaround for not creating a unneccessary table 
-	 * in DB for this dataobject. Is there a better way?
-	 */
-	public function requireTable() {
-		if($this->class=="MultilingualDataObject"){
-			return DB::dontRequireTable($this->class);
-		}
-		return parent::requireTable();
-	}
+
 }
 ?>
