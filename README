@@ -20,7 +20,9 @@ Installation Instructions
 -----------------------------------------------
 1. Place this module in your root of your Silverstripe installation. 
 2. Change your settings like langs and add multilanguage fields as you prefer in multilanguage/_config.php. 
-3. Run yoursitename.com/dev/build/?flush=1.
+3. For those classes that you wish to support multilingual you need to make them extend the provided classes MultilingualPage or MultilingualDataObject (depending of your class). If you want to give your SiteConfig multilingual support you will (sadly) have to hack it. You need to extend it from MultilingualDataObject instead of DataObject.
+4. Run yoursitename.com/dev/build/?flush=1.
+
 
 Usage Overview
 -----------------------------------------------
