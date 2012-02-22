@@ -16,6 +16,25 @@ Documentation
 This module allows you to add multilanguage fields to your page/dataobjects.
 Read more on http://www.kreationsbyran.se/blogg/multilingual-module-for-silverstripe/
 
+On classes that have extended from MultilingualPage/MultilingualDataObject one might 
+be forced to use:
+
+function getCMSFields() {
+		
+		SiteTree::disableCMSFieldsExtensions();
+		$fields = parent::getCMSFields();
+		SiteTree::enableCMSFieldsExtensions();
+		...
+		....
+		.
+		.
+		$this->extend('updateCMSFields', $fields);
+		return $fields;
+}
+
+in order to get all the fields to appear in the CMS as multilingual.
+
+
 Installation Instructions
 -----------------------------------------------
 1. Place this module in your root of your Silverstripe installation. 

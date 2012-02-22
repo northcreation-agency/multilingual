@@ -2,8 +2,11 @@
 /*
  * Extend from this page to make your site tree multilingual
  * Ex: extend MultilingualPage from Page
- * Tip: add static $hide_ancestor = 'MultilingualPage' to your Page to hide 
- * this page from being created.
+ * 
+ * Tip: add static $hide_ancestor = 'MultilingualPage' to your Page 
+ * that extends this page to hide this page from being created.
+ * 
+ * 
  */
 class MultilingualPage extends SiteTree{
 	
