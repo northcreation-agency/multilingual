@@ -43,18 +43,60 @@ body .right form div.CompositeField.multilingualfield label.left {
 
 
 /*
-Language link list in admin
-*/
-#TopLangSelector{
-	position: absolute;
-	right: 0px;
-}
-
-
-/*
 Language selector in admin
 */
 #TopLangSelectorDropdown{
 	float:right;
 	clear:none;
+}
+
+
+
+/*
+Language link list in admin
+*/
+#TopLangSelector{
+	position: absolute;
+	right: 0px;
+	z-index: 99;
+}
+
+
+/*LANGUAGES & FLAGS*/
+.langflags {
+	float:right;
+	list-style-type: none;
+	margin:0px;
+	padding:0px;
+}
+.langflags li{
+	float:left;	
+	
+}
+.langflags li a{
+	float:left;
+	padding:1px;	
+	margin:0px;
+}
+.langflags li a img{
+	margin:0px;
+	padding:0px 1px;	
+	opacity:0.3;
+	background: #fff;
+	border:1px solid #aaa;
+	border-top-color: #ccc;
+	border-bottom-color: #999;
+	box-shadow:0 1px 2px #ccc;
+	-moz-box-shadow:0 1px 2px #ccc;
+	-webkit-box-shadow:0 1px 2px #ccc;
+	
+}
+.langflags li a:hover,
+.langflags li a.selected{
+	background: transparent;
+}
+.langflags li a:hover img,
+.langflags li a.selected img{
+	opacity:1;
+	
 }

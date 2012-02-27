@@ -1,15 +1,16 @@
 <?php
 
 class Multilingual extends DataObjectDecorator {
-	
-	/******************************************************************************************************
-	/* lang statics, getter, setters
-	/******************************************************************************************************/	
-	
+	/*	 * ****************************************************************************************************
+	  /* lang statics, getter, setters
+	  /***************************************************************************************************** */
+
 	static $decorated_class; // used in the child classes to get what we are decorating
+
 	function get_decorated_class() {
 		return static::$decorated_class;
 	}
+
 	private static $lang;
 	private static $default_lang = "sv";
 
@@ -20,11 +21,11 @@ class Multilingual extends DataObjectDecorator {
 		"Swedish" => array("sv" => "sv_SE"),
 		"English" => array("en" => "en_US"),
 	);
+
 	static function set_langs($array) {
 		static::$langs = $array;
 	}
 
-	
 	/*
 	 * All multilingual fields on the object, will
 	 * translate to selected language if found on the decorated object.
@@ -112,19 +113,17 @@ class Multilingual extends DataObjectDecorator {
 		return ($arr);
 	}
 
-	
-	
-	
-	/******************************************************************************************************
-	/* Decoration functions 	 
-	/******************************************************************************************************/
-	
+	/*	 * ****************************************************************************************************
+	  /* Decoration functions
+	  /***************************************************************************************************** */
+
 	/*
 	 * Enable function, which simplifies the activation of multilingual module.
 	 * It extends SiteTree, SiteConfig and the custom dataobject "TranslatableObject".
 	 * It also creates URL-rules for all the languages.
 	 */
-	public static function enable(){
+
+	public static function enable() {
 		DataObject::add_extension("SiteConfig", "Multilingual_SiteConfig");
 		DataObject::add_extension("SiteTree", "Multilingual_SiteTree");
 		DataObject::add_extension("MultilingualDataObject", "Multilingual_DataObject");
@@ -134,60 +133,61 @@ class Multilingual extends DataObjectDecorator {
 			));
 		}
 	}
-	
+
 	/*
 	 * This function does not return anything in the traditional sense for a decorator. 
 	 * Instead it adds to the DB-array for all the classes that have the found multilingual fields
 	 */
+
 	public function extraStatics() {
-		
 		if (Multilingual::multilingual_extra_langs()) {
 			$db = array();
 			$decorated_class = static::get_decorated_class();
-			
+
 			//subclasses, and decorated, parent class
 			$subclasses = ClassInfo::subclassesFor($decorated_class);
-			foreach ($subclasses as $key=>$class) {
+			foreach ($subclasses as $key => $class) {
 				$db = array();
 				$origfields = Object::get_static($class, "db");
-				$origkeys = array_keys($origfields);				
-				if(!($class_multilingual_fields=Object::get_static($class, "multilingual_fields"))){
-					$class_multilingual_fields=array();
+				if (is_array($origfields)) {
+					$origkeys = array_keys($origfields);
+					if (!($class_multilingual_fields = Object::get_static($class, "multilingual_fields"))) {
+						$class_multilingual_fields = array();
+					}
+					foreach (Multilingual::multilingual_extra_langs() as $lang) {
+
+						//look after the global fields set in _config.php
+						foreach (static::multilingual_fields() as $fieldtotranslate) {
+							// make sure we find a field with correct name that hasnt been translated before
+							if (in_array($fieldtotranslate, $origkeys) && !in_array($fieldtotranslate . "_" . $lang, $origfields)) {
+								$db[$fieldtotranslate . "_" . $lang] = $origfields[$fieldtotranslate];
+							}
+						}
+						//look after class multilingual fields set on class
+						foreach ($class_multilingual_fields as $fieldtotranslate) {
+							// make sure we find a field with correct name that hasnt been translated before
+							if (in_array($fieldtotranslate, $origkeys) && !in_array($fieldtotranslate . "_" . $lang, $origfields)) {
+								$db[$fieldtotranslate . "_" . $lang] = $origfields[$fieldtotranslate];
+							}
+						}
+					}
+					Object::set_static($class, "db", array_merge($origfields, $db));
 				}
-				foreach (Multilingual::multilingual_extra_langs() as $lang) {
-					
-					//look after the global fields set in _config.php
-					foreach (static::multilingual_fields() as $fieldtotranslate) {
-						// make sure we find a field with correct name that hasnt been translated before
-						if (in_array($fieldtotranslate, $origkeys) && !in_array($fieldtotranslate . "_" . $lang, $origfields)) {
-							$db[$fieldtotranslate . "_" . $lang] = $origfields[$fieldtotranslate];
-						}
-					}
-					//look after class multilingual fields set on class
-					foreach ($class_multilingual_fields as $fieldtotranslate) {
-						// make sure we find a field with correct name that hasnt been translated before
-						if (in_array($fieldtotranslate, $origkeys) && !in_array($fieldtotranslate . "_" . $lang, $origfields)) {
-							$db[$fieldtotranslate . "_" . $lang] = $origfields[$fieldtotranslate];
-						}
-					}
-				}								
-				Object::set_static($class, "db", array_merge($origfields, $db));
-			}			
+			}
 		}
 	}
-	
-	
-	
-	/******************************************************************************************************
-	/* ADMIN / CMS functions
-	/******************************************************************************************************/
-	
+
+	/*	 * ****************************************************************************************************
+	  /* ADMIN / CMS functions
+	  /***************************************************************************************************** */
+
 	/*
 	 * Admin lang when changing languages in admin.
 	 * In admin we use a cookie to set and remember current language.
 	 * The cookie is set from js-file javascript/multilingual.js
 	 * @returns String language
 	 */
+
 	static function admin_current_lang($showfull = true) {
 		$currentlang = Cookie::get("CurrentLanguageAdmin");
 		if (!$currentlang) {
@@ -199,7 +199,7 @@ class Multilingual extends DataObjectDecorator {
 		} else {
 			return $currentlang;
 		}
-	}	
+	}
 
 	/*
 	 * Replace all fields added in $multilingual array to
@@ -207,19 +207,24 @@ class Multilingual extends DataObjectDecorator {
 	 * Please use the "SiteTree::disableCMSFieldsExtensions()" and "SiteTree::enableCMSFieldsExtensions()"
 	 * bewtween "parent::getCMSFields()" in your sub classes for full access to all multilingual fields.
 	 */
+	function getRequirementsForPopup(){
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
+		Requirements::javascript("multilingual/javascript/multilingual.js");
+		Requirements::css("multilingual/css/multilingual.css");
+	}
 	public function updateCMSFields(FieldSet &$f) {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript("multilingual/javascript/multilingual.js");
 		Requirements::css("multilingual/css/multilingual.css");
-		$values = array();		
-		$class_multilingual_fields=Object::get_static($this->owner->ClassName, "multilingual_fields")?Object::get_static($this->owner->ClassName, "multilingual_fields"):array();				
-		$global_multilingual_fields=static::multilingual_fields()?static::multilingual_fields():array();
-		$multilingual_fields=array_merge($class_multilingual_fields, $global_multilingual_fields);		
+		$values = array();
+		$class_multilingual_fields = Object::get_static($this->owner->ClassName, "multilingual_fields") ? Object::get_static($this->owner->ClassName, "multilingual_fields") : array();
+		$global_multilingual_fields = static::multilingual_fields() ? static::multilingual_fields() : array();
+		$multilingual_fields = array_merge($class_multilingual_fields, $global_multilingual_fields);
 		foreach ($multilingual_fields as $fieldname) {
 			$values = null;
-			$fields = null;			
+			$fields = null;
 			$originalfield = $f->dataFieldByName($fieldname);
-			if ($originalfield) {				
+			if ($originalfield) {
 				foreach (Multilingual::$langs as $langnice => $langarray) {
 					$key = array_keys($langarray);
 					$langcode = $key[0];
@@ -260,10 +265,10 @@ class Multilingual extends DataObjectDecorator {
 		//$f->unshift(new DropdownField("TopLangSelectorDropdown","", Multilingual::map_to_dropdown(),Multilingual::admin_current_lang()));
 	}
 
-	
 	/*
 	 * Build up necessary html for a simple flag selector for admin
 	 */
+
 	function CreateLangSelectorForAdmin() {
 		$langselectors = '<ul class="langflags" id="TopLangSelector">';
 		$origlang = Multilingual::current_lang();
@@ -282,10 +287,9 @@ class Multilingual extends DataObjectDecorator {
 		return $langselectors;
 	}
 
-	
-	/******************************************************************************************************
-	/* Template functions
-	/******************************************************************************************************/
+	/*	 * ****************************************************************************************************
+	  /* Template functions
+	  /***************************************************************************************************** */
 
 	function LangSelector($displayCurrentLang = false, $CheckExistsfield = false) {//checkexistfield couldbe ex "Title", it will then check if Title_XX exists
 		$list = new DataObjectSet();
@@ -316,18 +320,21 @@ class Multilingual extends DataObjectDecorator {
 		}
 		Multilingual::set_current_lang($origlang);
 		return $list;
-	}	
+	}
 
 }
 
 class Multilingual_SiteConfig extends Multilingual {
+
 	static $decorated_class = "SiteConfig";
 	static $multilingual_fields = array(
 		"Tagline",
 	);
+
 }
 
 class Multilingual_SiteTree extends Multilingual {
+
 	static $decorated_class = "SiteTree";
 	static $multilingual_fields = array(
 		"Title",
@@ -338,13 +345,16 @@ class Multilingual_SiteTree extends Multilingual {
 		"MetaKeywords",
 		"ExtraMeta",
 	);
+
 }
 
 class Multilingual_DataObject extends Multilingual {
+
 	static $decorated_class = "MultilingualDataObject";
 	static $multilingual_fields = array(
-		"Title"		
+		"Title"
 	);
+
 }
 
 ?>
