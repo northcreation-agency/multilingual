@@ -5,14 +5,26 @@ class MultilingualModelAsController extends ModelAsController {
 		if(isset($_SERVER['REQUEST_URI'])){			
 			$baseUrl = Director::baseUrl();
 			$requestUri = $_SERVER['REQUEST_URI'];
-			$lang = substr($requestUri, strlen($baseUrl), 2);			
+			$lang = substr($requestUri, strlen($baseUrl), 2);						
+			/*if(empty($lang)){
+				
+				Multilingual::set_current_lang(Multilingual::start_lang());	
+				$localesmap= Multilingual::map_locale();						
+				if(!empty($localesmap[$lang])){ 
+					i18n::set_locale($localesmap[$lang]); //Setting the locale 
+				}else { 
+					i18n::set_locale($localesmap[Multilingual::start_lang()]); // default locale
+				}       
+			}*/
+			
+			
 			Multilingual::set_current_lang($lang);	
 			$localesmap= Multilingual::map_locale();						
 			if(!empty($localesmap[$lang])){ 
 				i18n::set_locale($localesmap[$lang]); //Setting the locale 
 			}else { 
 				i18n::set_locale($localesmap[Multilingual::default_lang()]); // default locale
-			}       
+			}
 		}		
 		if($this->request->latestParam("URLSegment") == "" || $this->request->latestParam("URLSegment") == 'home') {						
 			
@@ -26,30 +38,45 @@ class MultilingualModelAsController extends ModelAsController {
 	 * @return ContentController
 	 */
 	public function getNestedController() {
-		$request = $this->request;
+		$request = $this->request;		
+			
 		
-		/* modded from original */
+		
 		$params=$this->getURLParams();		
 		$URLSegment = $request->param('URLSegment')?$request->param('URLSegment'):$params['URLSegment'];		
 		if(!$URLSegment) {
 			throw new Exception('ModelAsController->getNestedController(): was not passed a URLSegment value.');
 		}
-		/* end modded*/
-		
-		
+				
 		// Find page by link, regardless of current locale settings
-		Translatable::disable_locale_filter();
+		Translatable::disable_locale_filter();		
+		
+		
+		/* modded from original */
+		$lang=Multilingual::current_lang();
+		if(Multilingual::$use_URLSegment && Multilingual::default_lang()!=$lang){
+			$urlsegmentfield="URLSegment_".$lang;
+			
+		}else{
+			$urlsegmentfield="URLSegment";
+			
+		}
 		$sitetree = DataObject::get_one(
 			'SiteTree', 
 			sprintf(
-				'"URLSegment" = \'%s\' %s', 
+				'"'.$urlsegmentfield.'" = \'%s\' %s', 
 				Convert::raw2sql($URLSegment), 
 				(SiteTree::nested_urls() ? 'AND "ParentID" = 0' : null)
 			)
 		);
+		/* end modded*/
+		
+		
+				
 		Translatable::enable_locale_filter();
 		
-		if(!$sitetree) {
+		if(!$sitetree) {			
+			
 			// If a root page has been renamed, redirect to the new location.
 			// See ContentController->handleRequest() for similiar logic.
 			$redirect = self::find_old_page($URLSegment);
@@ -90,6 +117,53 @@ class MultilingualModelAsController extends ModelAsController {
 		}
 		
 		return self::controller_for($sitetree, $this->request->param('Action'));
+	}
+	
+	
+	/**
+	 * Modded from original to make alternative URLSegments to work (from multilingual)
+	 * 
+	 * @param string $URLSegment A subset of the url. i.e in /home/contact/ home and contact are URLSegment.
+	 * @param int $parentID The ID of the parent of the page the URLSegment belongs to. 
+	 * @return SiteTree
+	 */
+	static function find_old_page($URLSegment,$parentID = 0, $ignoreNestedURLs = false) {
+		$lang=Multilingual::current_lang();
+		
+		if(Multilingual::$use_URLSegment && Multilingual::default_lang()!=$lang){
+			$urlsegmentfield="URLSegment_".$lang;			
+		}else{
+			$urlsegmentfield="URLSegment";			
+		}
+		$URLSegment = Convert::raw2sql($URLSegment);
+		
+		$useParentIDFilter = SiteTree::nested_urls() && $parentID;
+				
+		// First look for a non-nested page that has a unique URLSegment and can be redirected to.
+		if(SiteTree::nested_urls()) {
+			$pages = DataObject::get(
+				'SiteTree', 
+				"\"".$urlsegmentfield."\" = '$URLSegment'" . ($useParentIDFilter ? ' AND "ParentID" = ' . (int)$parentID : '')
+			);
+			if($pages && $pages->Count() == 1) return $pages->First();
+		}
+		
+		// Get an old version of a page that has been renamed.
+		$query = new SQLQuery (
+			'"RecordID"',
+			'"SiteTree_versions"',
+			"\"".$urlsegmentfield."\" = '$URLSegment' AND \"WasPublished\" = 1" . ($useParentIDFilter ? ' AND "ParentID" = ' . (int)$parentID : ''),
+			'"LastEdited" DESC',
+			null,
+			null,
+			1
+		);
+		$record = $query->execute()->first();
+		
+		if($record && ($oldPage = DataObject::get_by_id('SiteTree', $record['RecordID']))) {
+			// Run the page through an extra filter to ensure that all decorators are applied.
+			if(SiteTree::get_by_link($oldPage->RelativeLink())) return $oldPage;
+		}
 	}
 
 }

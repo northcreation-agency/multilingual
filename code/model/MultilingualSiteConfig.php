@@ -1,13 +1,10 @@
 <?php
 /*
- * class that enables multilingual support for all dataobjects that inherits from it
- * 
- * Extend from this DataObject to make your dataobjects multilingual
+ * Necessary to make SiteConfig multilingual
+ * An alternative is to simply copy-paste this function in to siteconfig directly
  */
-class MultilingualDataObject extends DataObject{		
-	function getRequirementsForPopup(){
-		$this->extend("onRequirementsForPopup");
-	}
+class MultilingualSiteConfig extends DataObject{		
+
 	//fix for multilanguage, override getField from dataobject.php
 	public function getField($field) {
 
@@ -38,8 +35,7 @@ class MultilingualDataObject extends DataObject{
 		}
 		return isset($this->record[$field]) ? $this->record[$field] : null;
 	}
-	
-	
+
 
 }
 ?>

@@ -5,6 +5,8 @@ body .right form div.CompositeField.multilingualfield {
 body .right form div.CompositeField.multilingualfield label.left {
 	margin-left:0px;
 	width:auto;
+	float:none;
+	margin-bottom:0px;
 }
 
 .marked-label{
@@ -41,6 +43,24 @@ body .right form div.CompositeField.multilingualfield label.left {
 	display:none;
 }
 
+/* Fix UI for URLSegment */
+html .right form #URL .fieldgroup{
+	height: auto;
+}
+html .right form #URL .fieldgroup >* {
+	display:inline-block
+}
+html .right form #URL .fieldgroup .CompositeField{
+	margin-left: 0px;
+}
+html .right form #URL .fieldgroup .CompositeField .marked-label{
+	height: 12px;
+	min-width: 10px;
+	margin: 0;
+}
+html .right form #URL .fieldgroup .CompositeField .language-nice{
+	display:none;
+}
 
 /*
 Language selector in admin
@@ -68,20 +88,20 @@ Language link list in admin
 	list-style-type: none;
 	margin:0px;
 	padding:0px;
+	list-style-type: none;
 }
 .langflags li{
 	float:left;	
-	
 }
 .langflags li a{
 	float:left;
 	padding:1px;	
 	margin:0px;
+	opacity:0.1;
 }
 .langflags li a img{
 	margin:0px;
-	padding:0px 1px;	
-	opacity:0.3;
+	padding:0px 1px;		
 	background: #fff;
 	border:1px solid #aaa;
 	border-top-color: #ccc;
@@ -89,14 +109,13 @@ Language link list in admin
 	box-shadow:0 1px 2px #ccc;
 	-moz-box-shadow:0 1px 2px #ccc;
 	-webkit-box-shadow:0 1px 2px #ccc;
+	height:16px;
 	
 }
 .langflags li a:hover,
 .langflags li a.selected{
 	background: transparent;
-}
-.langflags li a:hover img,
-.langflags li a.selected img{
+
 	opacity:1;
 	
 }

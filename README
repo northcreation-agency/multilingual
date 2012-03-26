@@ -16,6 +16,10 @@ Documentation
 This module allows you to add multilanguage fields to your page/dataobjects.
 Read more on http://www.kreationsbyran.se/blogg/multilingual-module-for-silverstripe/
 
+and 
+
+http://ss-multilingualdemo.kreationsbyran.se/documentation/
+
 On classes that have extended from MultilingualPage/MultilingualDataObject one might 
 be forced to use:
 
@@ -35,13 +39,16 @@ function getCMSFields() {
 in order to get all the fields to appear in the CMS as multilingual.
 
 
+
 Installation Instructions
 -----------------------------------------------
-1. Place this module in your root of your Silverstripe installation. 
-2. Change your settings like langs and add multilanguage fields as you prefer in multilanguage/_config.php. 
-3. For those classes that you wish to support multilingual you need to make them extend the provided classes MultilingualPage or MultilingualDataObject (depending of your class). If you want to give your SiteConfig multilingual support you will (sadly) have to hack it. You need to extend it from MultilingualDataObject instead of DataObject.
-4. Run yoursitename.com/dev/build/?flush=1.
-
+Add the module to the root of your site and name it to "multilingual" if not already namned that way.
+- Make your Page class extend from MultilingualPage (both class and controller)
+- Make SiteConfig extend MultilingualSiteConfig
+- Make all Dataobjects you want in multilingual extend from MultilingualDataObject instead of DataObject.
+Open up /multilingual/_config.php and set the module up
+Do /dev/build/ and Voila! 
+You can also do a /dev/build/?en=1 if you want all pages (that extend multilingualpage) to be viewable for english.
 
 Usage Overview
 -----------------------------------------------
