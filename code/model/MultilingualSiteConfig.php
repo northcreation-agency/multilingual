@@ -4,7 +4,10 @@
  * An alternative is to simply copy-paste this function in to siteconfig directly
  */
 class MultilingualSiteConfig extends DataObject{		
-
+	function getRequirementsForPopup(){
+		$this->extend("onRequirementsForPopup");
+	}
+	
 	//fix for multilanguage, override getField from dataobject.php
 	public function getField($field) {
 

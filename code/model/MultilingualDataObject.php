@@ -5,6 +5,7 @@
  * Extend from this DataObject to make your dataobjects multilingual
  */
 class MultilingualDataObject extends DataObject{		
+	static $db=array();
 	function getRequirementsForPopup(){
 		$this->extend("onRequirementsForPopup");
 	}

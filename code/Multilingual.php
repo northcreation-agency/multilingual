@@ -400,50 +400,6 @@ class Multilingual extends DataObjectDecorator {
 		 */
 		//$f->unshift(new DropdownField("TopLangSelectorDropdown","", Multilingual::map_to_dropdown(),Multilingual::admin_current_lang()));
 	}
-	
-	
-	
-	
-	
-	public function requireDefaultRecords(){
-		$idArray = explode('&',$_SERVER["QUERY_STRING"]);	
-		if(sizeof($idArray)>1){
-			foreach ($idArray as $index => $avPair){
-			  list($ignore, $value) = explode("=", $avPair);
-			  $id[$index] = $value;
-			  $allowed_langs=array_values(self::map_locale());
-			  if($value && in_array($index,$allowed_langs)){
-			  	if($index==Multilingual::default_lang()){
-			  		$fieldname="LangActive";
-			  	}else{
-			  		$fieldname="LangActive_".$index;
-			  	}
-		  		$MultilingualDataObjects=DataObject::get("MultilingualDataObject");
-		  		if($MultilingualDataObjects){
-		  			foreach($MultilingualDataObjects as $object){
-		  				$object->$fieldname=true;
-		  				$object->write();
-		  			}
-		  		}
-		  		$MultilingualPages=DataObject::get("MultilingualPage");
-		  		if($MultilingualPages){
-	  				foreach($MultilingualPages as $object){
-		  				$object->$fieldname=true;		  				
-						if($object->isPublished()){
-							$object->doPublish();
-						}else{
-							$object->write();
-						}
-		  			}
-
-		  		}			  				  	
-			  }
-			}
-		}
-		
-	}
-	
-	
 
 	/*
 	 * Build up necessary html for a simple flag selector for admin

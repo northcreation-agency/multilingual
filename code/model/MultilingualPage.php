@@ -20,6 +20,9 @@ class MultilingualPage extends SiteTree {
 	//it translates those specific fields on the page
 	public static $multilingual_fields=array();
 	
+	function getRequirementsForPopup(){
+		$this->extend("onRequirementsForPopup");
+	}
 
 	//fix for multilanguage, override getField from dataobject.php
 	public function getField($field) {
