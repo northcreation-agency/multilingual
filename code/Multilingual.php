@@ -296,7 +296,7 @@ class Multilingual extends DataObjectDecorator {
 
 		$class_multilingual_fields = Object::get_static($this->owner->ClassName, "multilingual_fields") ? Object::get_static($this->owner->ClassName, "multilingual_fields") : array();
 		$global_multilingual_fields = static::multilingual_fields() ? static::multilingual_fields() : array();
-		$multilingual_fields = array_merge($class_multilingual_fields, $global_multilingual_fields);
+		$multilingual_fields = array_unique(array_merge($class_multilingual_fields, $global_multilingual_fields));
 		foreach ($multilingual_fields as $fieldname) {
 
 			$fields = null;
