@@ -11,6 +11,9 @@ Requirements
 -----------------------------------------------
 Tested on Silverstripe 2.4.6
 
+For Multilingual module 2.0, for Silverstripe 3.0 see
+http://www.kreationsbyran.se/blogg/multilingual-module-2-0-for-silverstripe-cms-3-0/
+
 Documentation
 -----------------------------------------------
 This module allows you to add multilanguage fields to your page/dataobjects.
